@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <style>
+      #navbar{
+        display: flex;
+        height: 70px;
+        width: 100%;
+        border: 1px solid black;
+        justify-content: end;
+        align-items: center;
+        gap: 10px;
+        padding-right: 20px;
+        font-size: 18px;
+      }
+
+      #menu{
+        height:auto;
+        width: 100%;
+        /* border: 1px solid red; */
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        grid-template-rows: auto;
+        gap: 20px;
+      }
+
+     #menu  #box{
+        height: 90%;
+        width: 80%;
+        margin: auto;
+        border: 1px solid black;
+
+      }
+      #box .img{
+        height: 60%;
+        width: 90%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="navbar">
+      <!--Add navbar divs here-->
+      <!-- Link to bucket.html -->
+      <div>Login</div>
+      <div>sign-Up</div>
+      <div>Products</div>
+      <a href="bucket.html"><div id="go_to_bucket">Bucket</div></a>
+      <div id="coffee_count">0
+        <!--Show total number of coffee added to bucket here, do not add anything only Total count. Not even "Count - 5" but like this "5" -->
+      </div>
+    </div>
+
+    <div id="menu">
+      <!--Show coffee list here in grid format-->
+      <!-- add an add to bucket button to each item, give it HTML id as 'add_to_bucket' -->
+    </div>
+  </body>
+</html>
+<script>
+ 
+ 
+ let cartdata=JSON.parse(localStorage.getItem("coffee")) ||[]
+  const url="https://masai-mock-api.herokuapp.com/coffee/menu"
+
+  
+
+  fetch(url)
+  .then(function(res){
+    return res.json()
+  }).then(function(res){
+    let menu=res.menu.data
+    // console.log("res",menu)
+    append(menu)
+  }).catch(function(err){
+    console.log(err)
+  })
+
+  
+function append(data){
+ 
+  data.forEach(function(el){
+ let div=document.createElement("div")
+ div.setAttribute("id","box")
+
+ let img=document.createElement("img")
+ img.src=el.image;
+ img.setAttribute("class","img")
+
+ let name=document.createElement("div")
+ name.innerText=el.title;
+
+ let price=document.createElement("div")
+ price.innerText=el.price;
+
+ let btn=document.createElement("button")
+ btn.innerText="Add to cart"
+ btn.setAttribute("id","add_to_bucket")
+ btn.addEventListener("click",function(){
+   addtocart(el)
+ })
+
+ div.append(img,name,price,btn)
+
+ document.getElementById("menu").append(div)
+
+  })
+
+
+
+}
+
+let len;
+function addtocart(el){
+  // console.log(el)
+  cartdata.push(el)
+
+  localStorage.setItem("coffee",JSON.stringify(cartdata))
+  
+  len=cartdata.length;
+  document.getElementById("coffee_count").innerText=`${len}`
+  // location.reload()
+}
+
+
+
+
+
+
+</script>
